@@ -22,3 +22,9 @@ spring:
 
 
 
+
+jwt:
+  identified-key: email
+  secret-key: atddtestisgood
+  access-token-expired-in: 30m
+  refresh-token-expired-in: 28d
