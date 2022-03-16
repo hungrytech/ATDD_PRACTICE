@@ -55,7 +55,7 @@ tasks.named('test') {
 }
 
 //querydsl
-def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = "$buildDir/generated/querydsl" as Object
 querydsl {
     jpa = true
     querydslSourcesDir = querydslDir
