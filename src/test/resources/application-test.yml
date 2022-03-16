@@ -23,6 +23,8 @@ spring:
 
 
 jwt:
+  auhorization-header: Authorization
+  token-type: Bearer
   secret-key: atddtestisgood
   access-token-expired-in: 30m
   identified-key: email

@@ -2,8 +2,10 @@ package com.atdd.practice.config.security;
 
 import com.atdd.practice.common.security.entrypoint.JwtAuthorizationEntryPoint;
 import com.atdd.practice.common.security.filter.JwtAuthorizationFilter;
+import com.atdd.practice.common.security.infrastructure.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +23,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final ObjectMapper objectMapper;
+
+    private final JwtUtils jwtUtils;
+
+    @Value("${jwt.authorization-header}")
+    private String authorizationHeader;
+
+    @Value("${jwt.token-type}")
+    private String tokenType;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -62,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter();
+        return new JwtAuthorizationFilter(authorizationHeader, tokenType, jwtUtils);
     }
 
     @Bean
