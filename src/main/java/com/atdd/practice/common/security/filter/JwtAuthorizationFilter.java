@@ -1,7 +1,11 @@
 package com.atdd.practice.common.security.filter;
 
 import com.atdd.practice.common.security.infrastructure.JwtUtils;
+import com.atdd.practice.member.application.MemberLoginInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -19,15 +23,29 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
 
+    private final UserDetailsService userDetailsService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String requestToken = request.getHeader(authorizationHeader);
-        String accessToken = jwtUtils.parseToken(extractAccessToken(requestToken));
+        String email = jwtUtils.parseToken(extractAccessToken(requestToken));
 
+        MemberLoginInfo memberLoginInfo = (MemberLoginInfo) userDetailsService.loadUserByUsername(email);
+
+        setAuthenticationInSecurityContextHolder(memberLoginInfo);
 
         filterChain.doFilter(request, response);
+    }
+
+    private void setAuthenticationInSecurityContextHolder(MemberLoginInfo memberLoginInfo) {
+        SecurityContextHolder.getContext()
+                .setAuthentication(
+                        new UsernamePasswordAuthenticationToken(
+                                memberLoginInfo,
+                                null,
+                                memberLoginInfo.getAuthorities()));
     }
 
     private String extractAccessToken(String token) {
