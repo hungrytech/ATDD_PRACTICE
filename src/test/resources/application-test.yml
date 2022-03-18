@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
-    url: jdbc:h2:tcp://localhost/~/Documents/utility/testdb
+    url: jdbc:h2:~/Documents/utility/testdb
 
   jpa:
     database: h2

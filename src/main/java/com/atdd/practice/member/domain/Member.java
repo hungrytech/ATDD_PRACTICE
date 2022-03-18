@@ -12,6 +12,7 @@ import javax.persistence.*;
 public class Member {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
@@ -23,7 +24,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public Member(String email, String password, Role role) {
+    private Member(String email, String password, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;
