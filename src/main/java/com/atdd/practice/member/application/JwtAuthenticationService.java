@@ -1,5 +1,6 @@
 package com.atdd.practice.member.application;
 
+import com.atdd.practice.member.application.exception.NotFoundMemberException;
 import com.atdd.practice.member.domain.Member;
 import com.atdd.practice.member.domain.MemberRepository;
 import com.atdd.practice.member.domain.Role;
@@ -25,7 +26,7 @@ public class JwtAuthenticationService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String identificationValue) throws UsernameNotFoundException {
         Member member = memberRepository.findMemberByEmail(identificationValue)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(NotFoundMemberException::new);
         return new MemberLoginInfo(member.getId(), member.getEmail(), "", extractRole(member.getRole()));
     }
 
