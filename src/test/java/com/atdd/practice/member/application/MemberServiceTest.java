@@ -1,5 +1,6 @@
 package com.atdd.practice.member.application;
 
+import com.atdd.practice.common.config.ServiceTest;
 import com.atdd.practice.member.application.exception.DuplicateEmailException;
 import com.atdd.practice.member.domain.Member;
 import com.atdd.practice.member.domain.MemberRepository;
@@ -20,8 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
-@ExtendWith(MockitoExtension.class)
-class MemberServiceTest {
+class MemberServiceTest extends ServiceTest {
 
     private MemberService memberService;
 

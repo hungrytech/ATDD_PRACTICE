@@ -44,6 +44,7 @@ public class JwtUtils {
         Date expiredDateTime = createExpiredTimeByCurrentDate(refreshTokenExpiredIn, currentDateTime);
         return new RefreshToken(
                 createToken(identificationValue, expiredDateTime),
+                refreshTokenExpiredIn.toMillis(),
                 expiredDateTime);
     }
 

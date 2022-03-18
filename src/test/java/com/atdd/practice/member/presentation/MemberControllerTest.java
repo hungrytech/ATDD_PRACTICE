@@ -41,7 +41,7 @@ class MemberControllerTest extends AcceptanceTest {
         );
     }
 
-    private ExtractableResponse<Response> join(MemberJoinRequest memberJoinRequest) {
+    public static ExtractableResponse<Response> join(MemberJoinRequest memberJoinRequest) {
         return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE).log().all()
                 .body(memberJoinRequest)

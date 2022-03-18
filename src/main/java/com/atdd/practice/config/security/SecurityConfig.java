@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final ObjectMapper objectMapper;
 
-    private final UserDetailsService authService;
+    private final UserDetailsService jwtAuthenticationService;
 
     private final JwtUtils jwtUtils;
 
@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .configurationSource(configurationSource())
                 .and()
                     .authorizeRequests()
-                        .antMatchers(HttpMethod.POST, "/api/v1/members")
+                        .antMatchers(HttpMethod.POST, "/api/v1/members", "/api/v1/login")
                         .permitAll()
                 .and()
                     .authorizeRequests()
@@ -84,7 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(authorizationHeader, tokenType, jwtUtils, authService);
+        return new JwtAuthorizationFilter(authorizationHeader, tokenType, jwtUtils, jwtAuthenticationService);
     }
 
     @Bean
