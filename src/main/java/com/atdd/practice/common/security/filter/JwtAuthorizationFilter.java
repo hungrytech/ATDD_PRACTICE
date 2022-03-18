@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -30,13 +31,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String accessToken = request.getHeader(authorizationHeader);
-        String email = jwtUtils.parseToken(extractAccessToken(accessToken));
+        if (haveTokenInRequest(accessToken)) {
+            String email = jwtUtils.parseToken(extractAccessToken(accessToken));
 
-        MemberLoginInfo memberLoginInfo = (MemberLoginInfo) userDetailsService.loadUserByUsername(email);
+            MemberLoginInfo memberLoginInfo = (MemberLoginInfo) userDetailsService.loadUserByUsername(email);
 
-        setAuthenticationInSecurityContextHolder(memberLoginInfo);
+            setAuthenticationInSecurityContextHolder(memberLoginInfo);
+        }
 
         filterChain.doFilter(request, response);
+    }
+
+    private boolean haveTokenInRequest(String accessToken) {
+        return StringUtils.hasText(accessToken);
     }
 
     private void setAuthenticationInSecurityContextHolder(MemberLoginInfo memberLoginInfo) {
@@ -49,6 +56,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private String extractAccessToken(String token) {
+        if (token == null) {
+            return "";
+        }
         return token.substring(token.indexOf(tokenType + " "));
     }
 }
