@@ -2,11 +2,9 @@ package com.atdd.practice.member.fixture;
 
 import com.atdd.practice.common.security.infrastructure.RefreshToken;
 import com.atdd.practice.member.domain.Member;
-import org.apache.tomcat.util.http.parser.Authorization;
 
 import java.lang.reflect.Field;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public class MemberFixture {
