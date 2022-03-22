@@ -15,7 +15,7 @@ public class MemberRepositoryImpl implements CustomMemberRepository {
         Integer integer = jpaQueryFactory.selectOne()
                 .from(member)
                 .where(member.email.eq(email))
-                .fetchOne();
+                .fetchFirst();
 
         return integer != null;
     }
