@@ -35,7 +35,7 @@ public final class ApiResponseUtils {
                 Collections.singletonList(new DefaultErrorTemplate(message)));
     }
 
-    public static <T> ApiResponse createFailResponse(MethodArgumentNotValidException methodArgumentNotValidException) {
+    public static ApiResponse createFailResponse(MethodArgumentNotValidException methodArgumentNotValidException) {
         return new ApiFailResponse<>(convertErrorTemplateList(methodArgumentNotValidException));
     }
 
