@@ -3,10 +3,12 @@ package com.atdd.practice.member.presentation;
 import com.atdd.practice.common.config.AcceptanceTest;
 import com.atdd.practice.member.presentation.dto.request.MemberJoinRequest;
 import com.atdd.practice.member.presentation.dto.response.MemberJoinResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -17,6 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class MemberControllerTest extends AcceptanceTest {
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     // 1. 회원가입 요청을 보낸다
     // 2. 이메일 증복여부를 검사한다.
@@ -31,7 +36,7 @@ class MemberControllerTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = join(memberJoinRequest);
-        MemberJoinResponse memberJoinResponse = response.jsonPath().getObject("data", MemberJoinResponse.class);
+        MemberJoinResponse memberJoinResponse = convertToData(response, MemberJoinResponse.class);
 
         // then
         assertAll(

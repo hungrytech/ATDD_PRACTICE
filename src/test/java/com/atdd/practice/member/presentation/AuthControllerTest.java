@@ -34,7 +34,7 @@ public class AuthControllerTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = login(memberLoginRequest);
 
-        MemberLoginResponse memberLoginResponse = response.jsonPath().getObject("data", MemberLoginResponse.class);
+        MemberLoginResponse memberLoginResponse = convertToData(response, MemberLoginResponse.class);
 
         // then
         assertAll(
