@@ -37,24 +37,16 @@ class AuthServiceTest extends ServiceTest {
 
     private AuthService authService;
 
-    static class MockJwtUtils extends JwtUtils {
-
-        public MockJwtUtils() {
-            super(
-                    SECRET_KEY,
-                    IDENTIFIED_VALUE,
-                    ACCESS_TOKEN_EXPIRED_IN,
-                    REFRESH_TOKEN_EXPIRED_IN);
-        }
-    }
-
     @BeforeEach
     void setUp() {
         authService = new AuthService(
                 memberRepository,
                 refreshTokenRepository,
                 passwordEncoder,
-                new MockJwtUtils());
+                new JwtUtils(SECRET_KEY,
+                        IDENTIFIED_VALUE,
+                        ACCESS_TOKEN_EXPIRED_IN,
+                        REFRESH_TOKEN_EXPIRED_IN));
     }
 
     @DisplayName("로그인 성공 - accessToken과 refreshToken을 반환한다.")
