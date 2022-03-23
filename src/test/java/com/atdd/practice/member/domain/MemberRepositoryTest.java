@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Optional;
 
@@ -16,7 +15,6 @@ import static com.atdd.practice.member.fixture.MemberFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(QueryDslConfig.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @DataJpaTest
 class MemberRepositoryTest {
 
