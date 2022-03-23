@@ -37,6 +37,9 @@ dependencies {
     implementation 'com.querydsl:querydsl-jpa'
     implementation 'com.querydsl:querydsl-apt'
 
+    //guava
+    implementation("com.google.guava:guava:31.1-jre")
+
     //jwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
