@@ -23,10 +23,7 @@ public class MemberService {
         if (memberRepository.existsByEmail(memberJoinRequest.getEmail())) {
             throw new DuplicateEmailException();
         }
-
-        String encodedPassword = passwordEncoder.encode(memberJoinRequest.getPassword());
-
-        Member savedMember = memberRepository.save(memberJoinRequest.toEntity(encodedPassword));
+        Member savedMember = memberRepository.save(memberJoinRequest.toEntity(passwordEncoder));
 
         return new MemberJoinResponse(savedMember);
     }

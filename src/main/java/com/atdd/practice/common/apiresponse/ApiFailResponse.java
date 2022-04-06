@@ -6,12 +6,15 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
-public class ApiFailResponse<T> extends ApiResponse {
+public class ApiFailResponse extends ApiResponse {
 
-    private final List<T> error;
+    private final String error;
 
-    public ApiFailResponse(List<T> error) {
-        super(false);
-        this.error = (error == null || error.isEmpty()) ? Collections.emptyList() : error;
+    private final String errorDescription;
+
+    public ApiFailResponse(boolean success, String error, String errorDescription) {
+        super(success);
+        this.error = error;
+        this.errorDescription = errorDescription;
     }
 }

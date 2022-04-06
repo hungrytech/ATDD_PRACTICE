@@ -18,23 +18,27 @@ public class Member {
     @Column(unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
+    @Embedded
+    private Password password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Member(String email, String password, Role role) {
+    private Member(String email, Password password, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public static Member createCustomer(String email, String password) {
+    public static Member createCustomer(String email, Password password) {
         return new Member(email, password, Role.CUSTOMER);
     }
 
-    public static Member createAdmin(String email, String password) {
+    public static Member createAdmin(String email, Password password) {
         return new Member(email, password, Role.ADMIN);
+    }
+
+    public String getPassword() {
+        return this.password.getValue();
     }
 }

@@ -26,22 +26,10 @@ public final class ApiResponseUtils {
     }
 
     public static ApiResponse createFailResponse(Exception e) {
-        return new ApiFailResponse<>(
-                Collections.singletonList(new DefaultErrorTemplate(e.getMessage(), e.getClass().getTypeName())));
+        return new ApiFailResponse(false, e.getMessage(), e.getClass().getName());
     }
 
     public static ApiResponse createFailResponse(String message) {
-        return new ApiFailResponse<>(
-                Collections.singletonList(new DefaultErrorTemplate(message)));
-    }
-
-    public static ApiResponse createFailResponse(MethodArgumentNotValidException methodArgumentNotValidException) {
-        return new ApiFailResponse<>(convertErrorTemplateList(methodArgumentNotValidException));
-    }
-
-    private static List<DefaultErrorTemplate> convertErrorTemplateList(MethodArgumentNotValidException e) {
-        return e.getBindingResult().getAllErrors().stream()
-                .map(error -> new DefaultErrorTemplate(error.getDefaultMessage(), e.getClass().getTypeName()))
-                .collect(Collectors.toList());
+        return new ApiFailResponse(false, message, null);
     }
 }

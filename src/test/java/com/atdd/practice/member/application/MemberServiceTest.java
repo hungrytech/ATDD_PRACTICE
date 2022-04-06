@@ -2,6 +2,7 @@ package com.atdd.practice.member.application;
 
 import com.atdd.practice.common.config.ServiceTest;
 import com.atdd.practice.member.application.exception.DuplicateEmailException;
+import com.atdd.practice.member.application.exception.InvalidPasswordException;
 import com.atdd.practice.member.domain.Member;
 import com.atdd.practice.member.domain.MemberRepository;
 import com.atdd.practice.member.presentation.dto.request.MemberJoinRequest;
@@ -9,6 +10,9 @@ import com.atdd.practice.member.presentation.dto.response.MemberJoinResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -64,4 +68,34 @@ class MemberServiceTest extends ServiceTest {
         // then
         assertThatThrownBy(() -> memberService.join(memberJoinRequest)).isInstanceOf(DuplicateEmailException.class);
     }
+
+    @DisplayName("비밀번호가 빈값일 경우 회원가입에 실패한다.")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void 회원가입_실패_비밀번호_빈값(String password) {
+        // when
+        given(memberRepository.existsByEmail(anyString())).willReturn(false);
+        MemberJoinRequest memberJoinRequest = new MemberJoinRequest(CUSTOMER_MEMBER_EMAIL, password);
+
+        // then
+        assertThatThrownBy(() -> memberService.join(memberJoinRequest)).isInstanceOf(InvalidPasswordException.class);
+    }
+
+    @DisplayName("비밀번호안에 특수문자가 포함되지 않을경우 회원가입에 실패한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "dfed@fsfddd#",
+            "2d3f3425ddd",
+            "dfdsfe234dffd2",
+            "dfdfdsagadsf"
+    })
+    void 회원가입_실패_특수문자_포함되지_않음(String password) {
+        // when
+        given(memberRepository.existsByEmail(anyString())).willReturn(false);
+        MemberJoinRequest memberJoinRequest = new MemberJoinRequest(CUSTOMER_MEMBER_EMAIL, password);
+
+        // then
+        assertThatThrownBy(() -> memberService.join(memberJoinRequest)).isInstanceOf(InvalidPasswordException.class);
+    }
+
 }

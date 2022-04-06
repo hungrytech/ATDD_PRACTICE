@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static com.atdd.practice.member.fixture.MemberFixture.*;
-import static com.atdd.practice.member.presentation.MemberControllerTest.join;
+import static com.atdd.practice.member.presentation.MemberControllerTest.회원가입;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -26,13 +26,13 @@ public class AuthControllerTest extends AcceptanceTest {
     //6. accessToken, refreshToken 과 각각 만료시간을 반환한다.
     @DisplayName("정상적인 회원 로그인 성공")
     @Test
-    void login() {
+    void 로그인_성공() {
         // given
-        join(memberJoinRequest);
+        회원가입(memberJoinRequest);
         MemberLoginRequest memberLoginRequest = new MemberLoginRequest(CUSTOMER_MEMBER_EMAIL, CUSTOMER_MEMBER_PASSWORD);
 
         // when
-        ExtractableResponse<Response> response = login(memberLoginRequest);
+        ExtractableResponse<Response> response = 로그인_요청(memberLoginRequest);
 
         MemberLoginResponse memberLoginResponse = convertToData(response, MemberLoginResponse.class);
 
@@ -44,7 +44,26 @@ public class AuthControllerTest extends AcceptanceTest {
         );
     }
 
-    public static ExtractableResponse<Response> login(MemberLoginRequest memberLoginRequest) {
+    @DisplayName("아이디가 일치하지 않은경우")
+    @Test
+    void 로그인_실패_아이디_미일치() {
+        // given
+        회원가입(memberJoinRequest);
+        MemberLoginRequest memberLoginRequest = new MemberLoginRequest(ADMIN_MEMBER_EMAIL, CUSTOMER_MEMBER_PASSWORD);
+
+        // when
+        ExtractableResponse<Response> response = 로그인_요청(memberLoginRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(extractExceptionMessage(response)).isEqualTo("일치하는 계정 정보가 없습니다.")
+        );
+
+    }
+
+
+    public static ExtractableResponse<Response> 로그인_요청(MemberLoginRequest memberLoginRequest) {
         return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .log().all()
