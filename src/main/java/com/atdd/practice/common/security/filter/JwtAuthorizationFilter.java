@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final String authorizationHeader;
@@ -25,6 +24,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
 
     private final UserDetailsService userDetailsService;
+
+    private final String prefix;
+
+    public JwtAuthorizationFilter(
+            String authorizationHeader,
+            String tokenType,
+            JwtUtils jwtUtils,
+            UserDetailsService userDetailsService) {
+        this.authorizationHeader = authorizationHeader;
+        this.tokenType = tokenType;
+        this.jwtUtils = jwtUtils;
+        this.userDetailsService = userDetailsService;
+        prefix = tokenType + " ";
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -59,6 +72,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (token == null) {
             return "";
         }
-        return token.substring(token.indexOf(tokenType + " "));
+        return token.substring(this.prefix.length());
     }
 }
