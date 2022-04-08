@@ -1,6 +1,8 @@
 package com.atdd.practice.common.config;
 
 import com.atdd.practice.member.presentation.dto.request.MemberJoinRequest;
+import com.atdd.practice.member.presentation.dto.request.MemberLoginRequest;
+import com.atdd.practice.member.presentation.dto.response.MemberLoginResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -18,6 +20,9 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static com.atdd.practice.member.fixture.MemberFixture.CUSTOMER_MEMBER_EMAIL;
 import static com.atdd.practice.member.fixture.MemberFixture.CUSTOMER_MEMBER_PASSWORD;
+import static com.atdd.practice.member.presentation.AuthControllerTest.로그인_요청;
+import static com.atdd.practice.member.presentation.MemberControllerTest.회원가입;
+
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -33,6 +38,8 @@ public class AcceptanceTest {
     private static final String API_EXCEPTION_MESSAGE = "error";
 
     protected MemberJoinRequest memberJoinRequest = new MemberJoinRequest(CUSTOMER_MEMBER_EMAIL, CUSTOMER_MEMBER_PASSWORD);
+
+    protected MemberLoginRequest memberLoginRequest = new MemberLoginRequest(CUSTOMER_MEMBER_EMAIL, CUSTOMER_MEMBER_PASSWORD);
 
     @LocalServerPort
     protected int port;
@@ -58,6 +65,14 @@ public class AcceptanceTest {
     protected String extractExceptionMessage(ExtractableResponse<Response> response) {
         return response.jsonPath()
                 .get(API_EXCEPTION_MESSAGE);
+    }
+
+    protected String getAccessToken() {
+        회원가입(memberJoinRequest);
+
+        return convertToData(
+                로그인_요청(this.memberLoginRequest), MemberLoginResponse.class)
+                .getAccessToken();
     }
 
     private static RestAssuredConfig convertSnakeCaseConfig() {

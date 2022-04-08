@@ -19,7 +19,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class MemberControllerTest extends AcceptanceTest {
+public class MemberControllerTest extends AcceptanceTest {
 
     // 1. 회원가입 요청을 보낸다
     // 2. 이메일 증복여부를 검사한다.
