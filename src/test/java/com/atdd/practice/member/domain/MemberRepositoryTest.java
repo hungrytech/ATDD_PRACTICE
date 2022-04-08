@@ -25,7 +25,7 @@ class MemberRepositoryTest {
     @Test
     void find_by_email() {
         // when
-        Optional<Member> findMember = memberRepository.findMemberByEmail(ADMIN_MEMBER_EMAIL);
+        Optional<Member> findMember = memberRepository.findMemberByEmailValue(ADMIN_MEMBER_EMAIL);
         Member member = findMember.get();
 
         // then

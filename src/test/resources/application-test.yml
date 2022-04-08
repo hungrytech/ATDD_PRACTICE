@@ -1,4 +1,7 @@
 spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
   h2:
     console:
       enabled: true

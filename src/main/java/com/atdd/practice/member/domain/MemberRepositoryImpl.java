@@ -14,7 +14,7 @@ public class MemberRepositoryImpl implements CustomMemberRepository {
     public boolean existsByEmail(String email) {
         Integer integer = jpaQueryFactory.selectOne()
                 .from(member)
-                .where(member.email.eq(email))
+                .where(member.email.value.eq(email))
                 .fetchFirst();
 
         return integer != null;

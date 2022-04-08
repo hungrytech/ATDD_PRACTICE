@@ -56,7 +56,7 @@ class AuthServiceTest extends ServiceTest {
         MemberLoginRequest memberLoginRequest = new MemberLoginRequest(ADMIN_MEMBER_EMAIL, ADMIN_MEMBER_PASSWORD);
 
         // when
-        given(memberRepository.findMemberByEmail(anyString()))
+        given(memberRepository.findMemberByEmailValue(anyString()))
                 .willReturn(Optional.of(MEMBER_ADMIN));
         given(passwordEncoder.matches(anyString(), anyString()))
                 .willReturn(true);
@@ -79,7 +79,7 @@ class AuthServiceTest extends ServiceTest {
         MemberLoginRequest memberLoginRequest = new MemberLoginRequest(ADMIN_MEMBER_EMAIL, ADMIN_MEMBER_PASSWORD);
 
         // when
-        given(memberRepository.findMemberByEmail(anyString()))
+        given(memberRepository.findMemberByEmailValue(anyString()))
                 .willReturn(Optional.empty());
 
         // then
@@ -93,7 +93,7 @@ class AuthServiceTest extends ServiceTest {
         MemberLoginRequest memberLoginRequest = new MemberLoginRequest(ADMIN_MEMBER_EMAIL, ADMIN_MEMBER_PASSWORD);
 
         // when
-        given(memberRepository.findMemberByEmail(anyString()))
+        given(memberRepository.findMemberByEmailValue(anyString()))
                 .willReturn(Optional.of(MEMBER_ADMIN));
         given(passwordEncoder.matches(anyString(), anyString()))
                 .willReturn(false);

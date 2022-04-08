@@ -15,8 +15,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String email;
+    @Embedded
+    private Email email;
 
     @Embedded
     private Password password;
@@ -24,21 +24,25 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Member(String email, Password password, Role role) {
+    private Member(Email email, Password password, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public static Member createCustomer(String email, Password password) {
+    public static Member createCustomer(Email email, Password password) {
         return new Member(email, password, Role.CUSTOMER);
     }
 
-    public static Member createAdmin(String email, Password password) {
+    public static Member createAdmin(Email email, Password password) {
         return new Member(email, password, Role.ADMIN);
     }
 
     public String getPassword() {
         return this.password.getValue();
+    }
+
+    public String getEmail() {
+        return this.email.getValue();
     }
 }

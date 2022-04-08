@@ -1,9 +1,11 @@
 package com.atdd.practice.member.application;
 
 import com.atdd.practice.member.application.exception.DuplicateEmailException;
+import com.atdd.practice.member.domain.Email;
 import com.atdd.practice.member.domain.Member;
 import com.atdd.practice.member.domain.MemberRepository;
 import com.atdd.practice.member.presentation.dto.request.MemberJoinRequest;
+import com.atdd.practice.member.presentation.dto.response.EmailDuplicateResultMessage;
 import com.atdd.practice.member.presentation.dto.response.MemberJoinResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,5 +28,15 @@ public class MemberService {
         Member savedMember = memberRepository.save(memberJoinRequest.toEntity(passwordEncoder));
 
         return new MemberJoinResponse(savedMember);
+    }
+
+    @Transactional(readOnly = true)
+    public EmailDuplicateResultMessage checkOfDuplicateEmail(String requestEmail) {
+        Email.validateForm(requestEmail);
+
+        if (memberRepository.existsByEmail(requestEmail)) {
+            return EmailDuplicateResultMessage.DUPLICATE;
+        }
+        return EmailDuplicateResultMessage.AVAILABLE;
     }
 }

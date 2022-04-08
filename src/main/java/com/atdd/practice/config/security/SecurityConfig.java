@@ -48,6 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                         .antMatchers(HttpMethod.POST, "/api/v1/members", "/api/v1/login")
                         .permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/v1/members*")
+                        .permitAll()
                 .and()
                     .authorizeRequests()
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
@@ -71,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedOriginPattern("*");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowCredentials(true);

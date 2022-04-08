@@ -30,7 +30,7 @@ public class AuthService {
 
     @Transactional
     public MemberLoginResponse login(MemberLoginRequest memberLoginRequest) {
-        Member member = memberRepository.findMemberByEmail(memberLoginRequest.getEmail())
+        Member member = memberRepository.findMemberByEmailValue(memberLoginRequest.getEmail())
                 .orElseThrow(InvalidLoginInfoException::new);
 
         if (!passwordEncoder.matches(memberLoginRequest.getPassword(), member.getPassword())) {

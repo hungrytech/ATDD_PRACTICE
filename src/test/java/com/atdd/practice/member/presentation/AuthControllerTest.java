@@ -57,14 +57,30 @@ public class AuthControllerTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(extractExceptionMessage(response)).isEqualTo("일치하는 계정 정보가 없습니다.")
+                () -> assertThat(extractExceptionMessage(response)).isEqualTo("아이디 또는 비밀번호가 잘못되었습니다.")
         );
-
     }
 
+    @DisplayName("비밀번호가 일치하지 않은 경우")
+    @Test
+    void 로그인_실패_비밀번호_미일치() {
+        // given
+        회원가입(memberJoinRequest);
+        MemberLoginRequest memberLoginRequest = new MemberLoginRequest(CUSTOMER_MEMBER_EMAIL, ADMIN_MEMBER_PASSWORD);
+
+        // when
+        ExtractableResponse<Response> response = 로그인_요청(memberLoginRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(extractExceptionMessage(response)).isEqualTo("아이디 또는 비밀번호가 잘못되었습니다.")
+        );
+    }
 
     public static ExtractableResponse<Response> 로그인_요청(MemberLoginRequest memberLoginRequest) {
         return given()
+                .config(convertSnakeCaseConfig)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .log().all()
                 .body(memberLoginRequest)
@@ -74,5 +90,4 @@ public class AuthControllerTest extends AcceptanceTest {
                 .log().all()
                 .extract();
     }
-
 }

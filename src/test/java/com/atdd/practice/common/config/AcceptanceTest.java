@@ -1,9 +1,12 @@
 package com.atdd.practice.common.config;
 
-import com.atdd.practice.common.apiresponse.DefaultErrorTemplate;
-import com.atdd.practice.common.apiresponse.ErrorTemplate;
 import com.atdd.practice.member.presentation.dto.request.MemberJoinRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
+import io.restassured.config.ObjectMapperConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -12,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.LinkedHashMap;
-import java.util.List;
 
 import static com.atdd.practice.member.fixture.MemberFixture.CUSTOMER_MEMBER_EMAIL;
 import static com.atdd.practice.member.fixture.MemberFixture.CUSTOMER_MEMBER_PASSWORD;
@@ -25,6 +25,8 @@ public class AcceptanceTest {
 
     @Autowired
     private DatabaseCleanUp databaseCleanUp;
+
+    protected static final RestAssuredConfig convertSnakeCaseConfig = convertSnakeCaseConfig();
 
     private static final String API_RESPONSE_DATA = "data";
 
@@ -49,9 +51,22 @@ public class AcceptanceTest {
         return response.jsonPath().getObject(API_RESPONSE_DATA, type);
     }
 
+    protected String extractSuccessMessage(ExtractableResponse<Response> response) {
+        return response.jsonPath().get("message");
+    }
+
     protected String extractExceptionMessage(ExtractableResponse<Response> response) {
         return response.jsonPath()
                 .get(API_EXCEPTION_MESSAGE);
+    }
+
+    private static RestAssuredConfig convertSnakeCaseConfig() {
+        return RestAssured.config()
+                .objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(((cls, charset) -> {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    return objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+                            .registerModule(new JavaTimeModule());
+                })));
     }
 }
 

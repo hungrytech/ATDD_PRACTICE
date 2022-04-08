@@ -33,7 +33,7 @@ class JwtAuthenticationServiceTest extends ServiceTest {
         String userEmail = "xorals9448@gmail.com";
 
         // when
-        given(memberRepository.findMemberByEmail(userEmail)).willReturn(Optional.of(MEMBER_ADMIN));
+        given(memberRepository.findMemberByEmailValue(userEmail)).willReturn(Optional.of(MEMBER_ADMIN));
 
         UserDetails userDetails = jwtAuthenticationService.loadUserByUsername(userEmail);
 

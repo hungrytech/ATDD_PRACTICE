@@ -1,5 +1,6 @@
 package com.atdd.practice.member.presentation.dto.request;
 
+import com.atdd.practice.member.domain.Email;
 import com.atdd.practice.member.domain.Member;
 import com.atdd.practice.member.domain.Password;
 import lombok.AccessLevel;
@@ -22,6 +23,6 @@ public class MemberJoinRequest {
 
     public Member toEntity(PasswordEncoder passwordEncoder) {
         Password.validatePassword(this.password);
-        return Member.createCustomer(email, Password.of(passwordEncoder.encode(password)));
+        return Member.createCustomer(Email.of(email), Password.of(passwordEncoder.encode(password)));
     }
 }

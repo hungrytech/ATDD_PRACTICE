@@ -25,7 +25,7 @@ public class JwtAuthenticationService implements UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String identificationValue) throws UsernameNotFoundException {
-        Member member = memberRepository.findMemberByEmail(identificationValue)
+        Member member = memberRepository.findMemberByEmailValue(identificationValue)
                 .orElseThrow(NotFoundMemberException::new);
         return new MemberLoginInfo(member.getId(), member.getEmail(), "", extractRole(member.getRole()));
     }

@@ -4,7 +4,7 @@ import com.atdd.practice.common.exception.InvalidRequestException;
 
 public class InvalidLoginInfoException extends InvalidRequestException {
 
-    private static final String MESSAGE = "일치하는 계정 정보가 없습니다.";
+    private static final String MESSAGE = "아이디 또는 비밀번호가 잘못되었습니다.";
 
     public InvalidLoginInfoException() {
         super(MESSAGE);

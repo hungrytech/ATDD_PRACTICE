@@ -1,7 +1,9 @@
 package com.atdd.practice.member.domain;
 
+import com.atdd.practice.member.application.exception.InvalidEmailException;
 import com.atdd.practice.member.application.exception.InvalidPasswordException;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -31,4 +33,22 @@ public class MemberTest {
                 .isInstanceOf(InvalidPasswordException.class);
     }
 
+    @DisplayName("아이디 증복여부 검사 실패 이메일 형식에 알맞지 않음")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "dfdfefg.com",
+            "dfdf@dfdsvd",
+    })
+    void 아이디_증복검사_실패_잘못된_이메일_형식(String requestEmail) {
+        assertThatThrownBy(() -> Email.validateForm(requestEmail))
+                .isInstanceOf(InvalidEmailException.class);
+    }
+
+    @DisplayName("아이디 증복여부 검사 실패 요청한 이메일이 공백이거나 null")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void 아이디_증복검사_실패_공백_Null(String requestEmail) {
+        assertThatThrownBy(() -> Email.validateForm(requestEmail))
+                .isInstanceOf(InvalidEmailException.class);
+    }
 }
