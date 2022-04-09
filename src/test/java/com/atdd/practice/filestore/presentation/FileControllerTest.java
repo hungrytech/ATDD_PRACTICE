@@ -9,8 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.io.File;
-
+import static com.atdd.practice.filestore.fixture.TestFilePath.INVALID_EXTENSION_IMAGE_FILE;
+import static com.atdd.practice.filestore.fixture.TestFilePath.JPEG_IMAGE_FILE;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,15 +22,12 @@ public class FileControllerTest extends AcceptanceTest {
     // 3. 파일 업로드 완료 200 응답을 보낸다.
     @DisplayName("이미지 파일 업로드에 성공한다.")
     @Test
-    void 이미지_업로드_성공() {
-        // given
-        File file = new File(System.getProperty("user.dir") + "/src/test/resources/file/image_test.jpeg");
-
-        // when
+    void 업로드_성공() {
+        // given when
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
-                .multiPart("file", file)
+                .multiPart("file", JPEG_IMAGE_FILE)
                 .log().all()
                 .when()
                 .post("/api/v1/upload/image")
@@ -43,4 +40,23 @@ public class FileControllerTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @DisplayName("저장할 수 있는 확장자만 받을 수 있다.")
+    @Test
+    void 이미지_업로드_실패_잘못된_확장자() {
+        // given when
+        ExtractableResponse<Response> response = given()
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                .multiPart("file", INVALID_EXTENSION_IMAGE_FILE)
+                .log().all()
+                .when()
+                .post("/api/v1/upload/image")
+                .then()
+                .log()
+                .all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 }

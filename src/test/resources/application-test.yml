@@ -34,3 +34,6 @@ jwt:
   access-token-expired-in: 30m
   identified-key: email
   refresh-token-expired-in: 28d
+
+file:
+  dir-path: classpath:/test/resources/file/test/

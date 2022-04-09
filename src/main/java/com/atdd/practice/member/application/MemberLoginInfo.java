@@ -19,4 +19,8 @@ public class MemberLoginInfo extends User {
         super(username, password, authorities);
         this.id = id;
     }
+
+    public String getEmail() {
+        return getUsername();
+    }
 }
