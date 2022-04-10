@@ -2,6 +2,7 @@ package com.atdd.practice.filestore.application;
 
 import com.atdd.practice.common.config.ServiceTestForFile;
 import com.atdd.practice.filestore.application.exception.InvalidFileExtensionException;
+import com.atdd.practice.filestore.application.exception.InvalidVideoFileExtensionException;
 import com.atdd.practice.filestore.domain.FileStoreRepository;
 import com.atdd.practice.filestore.infrastructure.LocalFileDirMaker;
 import com.atdd.practice.filestore.infrastructure.LocalFileService;
@@ -49,7 +50,7 @@ public class FileStoreServiceTest extends ServiceTestForFile {
                 .doesNotThrowAnyException();
     }
 
-    @DisplayName("저장할 수 있는 확장자만 받을 수 있다.")
+    @DisplayName("저장할 수 있는 이미지 확장자만 받을 수 있다.")
     @Test
     void 이미지_업로드_실패_잘못된_확장자() throws Exception {
         // given
@@ -77,5 +78,20 @@ public class FileStoreServiceTest extends ServiceTestForFile {
         // when then
         assertThatCode(() -> fileStoreService.uploadVideoFile(TEST_MEMBER_LOGIN_INFO, mockMultipartFile))
                 .doesNotThrowAnyException();
+    }
+
+    @DisplayName("저장할 수 있는 동영상 확장자만 받을 수 있다.")
+    @Test
+    void 비디오_업로드_실패() throws Exception {
+        // given
+        MultipartFile mockMultipartFile = new MockMultipartFile(
+                INVALID_EXTENSION_VIDEO_FILE.getName(),
+                INVALID_EXTENSION_VIDEO_FILE.getName(),
+                MediaType.MULTIPART_FORM_DATA_VALUE,
+                new FileInputStream(INVALID_EXTENSION_VIDEO_FILE));
+
+        // when then
+        assertThatThrownBy(() -> fileStoreService.uploadVideoFile(TEST_MEMBER_LOGIN_INFO, mockMultipartFile))
+                .isInstanceOf(InvalidVideoFileExtensionException.class);
     }
 }
