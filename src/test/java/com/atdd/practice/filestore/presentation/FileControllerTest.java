@@ -15,7 +15,7 @@ import static com.atdd.practice.filestore.fixture.TestFilePath.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FileControllerTest extends AcceptanceTest {
+public class FileControllerTest extends FileAcceptanceTest {
 
 
     // 1. 사용자가 이미지 파일 업로드 요청을 보낸다
