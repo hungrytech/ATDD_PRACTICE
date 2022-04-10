@@ -63,4 +63,19 @@ public class FileStoreServiceTest extends ServiceTestForFile {
         assertThatThrownBy(() -> fileStoreService.uploadImageFile(TEST_MEMBER_LOGIN_INFO, mockMultipartFile))
                 .isInstanceOf(InvalidFileExtensionException.class);
     }
+
+    @DisplayName("비디오 파일 업로드에 성공한다.")
+    @Test
+    void 비디오_업로드_성공() throws Exception {
+        // given
+        MultipartFile mockMultipartFile = new MockMultipartFile(
+                MP4_VIDEO_FILE.getName(),
+                MP4_VIDEO_FILE.getName(),
+                MediaType.MULTIPART_FORM_DATA_VALUE,
+                new FileInputStream(MP4_VIDEO_FILE));
+
+        // when then
+        assertThatCode(() -> fileStoreService.uploadVideoFile(TEST_MEMBER_LOGIN_INFO, mockMultipartFile))
+                .doesNotThrowAnyException();
+    }
 }

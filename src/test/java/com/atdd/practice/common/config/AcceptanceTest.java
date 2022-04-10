@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import static com.atdd.practice.member.fixture.MemberFixture.CUSTOMER_MEMBER_EMAIL;
@@ -23,7 +24,7 @@ import static com.atdd.practice.member.fixture.MemberFixture.CUSTOMER_MEMBER_PAS
 import static com.atdd.practice.member.presentation.AuthControllerTest.로그인_요청;
 import static com.atdd.practice.member.presentation.MemberControllerTest.회원가입;
 
-
+@Import(FileAcceptanceTestConfig.class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AcceptanceTest {
@@ -36,6 +37,8 @@ public class AcceptanceTest {
     private static final String API_RESPONSE_DATA = "data";
 
     private static final String API_EXCEPTION_MESSAGE = "error";
+
+    protected static final String AUTHENTICATION_TYPE = "Bearer ";
 
     protected MemberJoinRequest memberJoinRequest = new MemberJoinRequest(CUSTOMER_MEMBER_EMAIL, CUSTOMER_MEMBER_PASSWORD);
 
@@ -70,7 +73,7 @@ public class AcceptanceTest {
     protected String getAccessToken() {
         회원가입(memberJoinRequest);
 
-        return convertToData(
+        return AUTHENTICATION_TYPE + convertToData(
                 로그인_요청(this.memberLoginRequest), MemberLoginResponse.class)
                 .getAccessToken();
     }

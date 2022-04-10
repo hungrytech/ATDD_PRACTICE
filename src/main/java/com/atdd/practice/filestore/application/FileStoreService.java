@@ -40,4 +40,20 @@ public class FileStoreService {
 
         fileStoreRepository.save(fileStore);
     }
+
+    public void uploadVideoFile(MemberLoginInfo memberLoginInfo, MultipartFile requestFile) throws IOException {
+        FileUploadResult fileUploadResult = fileService.uploadFile(
+                requestFile,
+                FileType.VIDEO,
+                memberLoginInfo.getEmail());
+
+        FileStore fileStore = FileStore.createFileStore(
+                memberLoginInfo.getId(),
+                FileInfo.of(
+                        fileUploadResult.getPath(),
+                        fileUploadResult.getExtension(),
+                        fileUploadResult.getOriginalFileName()));
+
+        fileStoreRepository.save(fileStore);
+    }
 }

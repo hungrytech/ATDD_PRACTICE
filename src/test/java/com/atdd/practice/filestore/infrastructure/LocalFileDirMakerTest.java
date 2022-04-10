@@ -27,7 +27,7 @@ class LocalFileDirMakerTest extends ServiceTestForFile {
         String memberLocalDir = localFileDirMaker.createTargetMemberDir(memberEmail);
 
         // then
-        assertThat(memberLocalDir).isEqualTo(TEST_UPLOAD_FILES_DIR_PATH + extractAccountId(memberEmail) + "/");
+        assertThat(memberLocalDir).isEqualTo(TEST_UPLOAD_FILES_DIR_PATH + "/" + extractAccountId(memberEmail) + "/");
     }
 
     private String extractAccountId(String memberEmail) {

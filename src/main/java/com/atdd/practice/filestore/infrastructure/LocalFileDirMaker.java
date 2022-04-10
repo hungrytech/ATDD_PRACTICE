@@ -1,6 +1,5 @@
 package com.atdd.practice.filestore.infrastructure;
 
-import com.atdd.practice.common.exception.ApplicationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,24 +16,17 @@ public class LocalFileDirMaker {
 
     public String createTargetMemberDir(String memberEmail) {
         String memberDirPath = createMemberDirPath(memberEmail);
-        if (createMemberDir(memberDirPath)) {
-            return memberDirPath;
-        }
-
-        return null;
+        createMemberDir(memberDirPath);
+        return memberDirPath;
     }
 
-    private boolean createMemberDir(String memberDirPath) {
-        File file = new File(memberDirPath);
-        if (!file.exists()) {
-            return file.mkdir();
-        }
-
-        throw new ApplicationException();
+    private void createMemberDir(String memberDirPath) {
+        File memberDir = new File(memberDirPath);
+        memberDir.mkdir();
     }
 
     private String createMemberDirPath(String memberEmail) {
-        return dirPath + extractAccountId(memberEmail) + "/";
+        return dirPath + "/" + extractAccountId(memberEmail) + "/";
     }
 
     private String extractAccountId(String memberEmail) {

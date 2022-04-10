@@ -36,4 +36,4 @@ jwt:
   refresh-token-expired-in: 28d
 
 file:
-  dir-path: classpath:/test/resources/file/test/
+  dir-path: src/test/resources/file/test

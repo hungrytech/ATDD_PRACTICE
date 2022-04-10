@@ -34,4 +34,15 @@ public class FileController {
         return ResponseEntity.ok()
                 .build();
     }
+
+    @PostMapping("/upload/video")
+    public ResponseEntity<ApiResponse> uploadVideo(
+            @AuthenticationPrincipal MemberLoginInfo memberLoginInfo,
+            @RequestParam(value = "file", required = false) MultipartFile multipartFile) throws IOException {
+
+        fileStoreService.uploadVideoFile(memberLoginInfo, multipartFile);
+
+        return ResponseEntity.ok()
+                .build();
+    }
 }
