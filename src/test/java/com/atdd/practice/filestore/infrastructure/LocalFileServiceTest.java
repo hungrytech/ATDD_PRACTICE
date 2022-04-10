@@ -1,6 +1,7 @@
 package com.atdd.practice.filestore.infrastructure;
 
 import com.atdd.practice.common.config.ServiceTestForFile;
+import com.atdd.practice.filestore.application.exception.InvalidAudioFileExtensionException;
 import com.atdd.practice.filestore.application.exception.InvalidFileExtensionException;
 import com.atdd.practice.filestore.application.exception.InvalidFileRequestException;
 import com.atdd.practice.filestore.application.exception.InvalidVideoFileExtensionException;
@@ -110,5 +111,43 @@ public class LocalFileServiceTest extends ServiceTestForFile {
         // when then
         assertThatThrownBy(() -> localFileService.uploadFile(mockMultipartFile, FileType.VIDEO, TEST_MEMBER_LOGIN_INFO.getEmail()))
                 .isInstanceOf(InvalidVideoFileExtensionException.class);
+    }
+
+    @DisplayName("오디오 파일 업로드에 성공한다.")
+    @Test
+    void 오디오_업로드_성공() throws IOException {
+        // given
+        MultipartFile mockMultipartFile = new MockMultipartFile(
+                MP3_VIDEO_FILE.getName(),
+                MP3_VIDEO_FILE.getName(),
+                MediaType.MULTIPART_FORM_DATA_VALUE,
+                new FileInputStream(MP3_VIDEO_FILE));
+
+        // when
+        FileUploadResult filUploadResult = localFileService.uploadFile(
+                mockMultipartFile,
+                FileType.AUDIO,
+                TEST_MEMBER_LOGIN_INFO.getEmail());
+
+        // then
+        assertAll(
+                () -> assertThat(filUploadResult.getPath()).isNotNull(),
+                () -> assertThat(filUploadResult.getOriginalFileName()).isEqualTo(mockMultipartFile.getOriginalFilename())
+        );
+    }
+
+    @DisplayName("저장할 수 있는 오디오 확장자만 받을 수 있다.")
+    @Test
+    void 오디오_업로드_실패_잘못된_확장자() throws Exception {
+        // given
+        MultipartFile mockMultipartFile = new MockMultipartFile(
+                INVALID_EXTENSION_AUDIO_FILE.getName(),
+                INVALID_EXTENSION_AUDIO_FILE.getName(),
+                MediaType.MULTIPART_FORM_DATA_VALUE,
+                new FileInputStream(INVALID_EXTENSION_AUDIO_FILE));
+
+        // when then
+        assertThatThrownBy(() -> localFileService.uploadFile(mockMultipartFile, FileType.AUDIO, TEST_MEMBER_LOGIN_INFO.getEmail()))
+                .isInstanceOf(InvalidAudioFileExtensionException.class);
     }
 }

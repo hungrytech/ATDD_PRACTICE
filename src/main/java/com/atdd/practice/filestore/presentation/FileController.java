@@ -45,4 +45,15 @@ public class FileController {
         return ResponseEntity.ok()
                 .build();
     }
+
+    @PostMapping("/upload/audio")
+    public ResponseEntity<ApiResponse> uploadAudio(
+            @AuthenticationPrincipal MemberLoginInfo memberLoginInfo,
+            @RequestParam(value = "file", required = false) MultipartFile multipartFile) throws IOException {
+
+        fileStoreService.uploadAudioFile(memberLoginInfo, multipartFile);
+
+        return ResponseEntity.ok()
+                .build();
+    }
 }

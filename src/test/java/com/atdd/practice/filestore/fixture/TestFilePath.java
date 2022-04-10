@@ -22,4 +22,8 @@ public class TestFilePath {
     public static final File MP4_VIDEO_FILE = new File(TEST_FILES_DIR_PATH + "video_test.mp4");
 
     public static final File INVALID_EXTENSION_VIDEO_FILE = new File(TEST_FILES_DIR_PATH + "video_validate_test.mov");
+
+    public static final File MP3_VIDEO_FILE = new File(TEST_FILES_DIR_PATH + "audio_test.mp3");
+
+    public static final File INVALID_EXTENSION_AUDIO_FILE = new File(TEST_FILES_DIR_PATH + "audio_validate_test.vox");
 }

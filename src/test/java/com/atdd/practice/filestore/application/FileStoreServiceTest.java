@@ -1,6 +1,7 @@
 package com.atdd.practice.filestore.application;
 
 import com.atdd.practice.common.config.ServiceTestForFile;
+import com.atdd.practice.filestore.application.exception.InvalidAudioFileExtensionException;
 import com.atdd.practice.filestore.application.exception.InvalidFileExtensionException;
 import com.atdd.practice.filestore.application.exception.InvalidVideoFileExtensionException;
 import com.atdd.practice.filestore.domain.FileStoreRepository;
@@ -93,5 +94,35 @@ public class FileStoreServiceTest extends ServiceTestForFile {
         // when then
         assertThatThrownBy(() -> fileStoreService.uploadVideoFile(TEST_MEMBER_LOGIN_INFO, mockMultipartFile))
                 .isInstanceOf(InvalidVideoFileExtensionException.class);
+    }
+
+    @DisplayName("오디오 파일 업로드에 성공한다.")
+    @Test
+    void 오디오_업로드_성공() throws Exception {
+        // given
+        MultipartFile mockMultipartFile = new MockMultipartFile(
+                MP3_VIDEO_FILE.getName(),
+                MP3_VIDEO_FILE.getName(),
+                MediaType.MULTIPART_FORM_DATA_VALUE,
+                new FileInputStream(MP3_VIDEO_FILE));
+
+        // when then
+        assertThatCode(() -> fileStoreService.uploadAudioFile(TEST_MEMBER_LOGIN_INFO, mockMultipartFile))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("저장할 수 있는 오디오 확장자만 받을 수 있다.")
+    @Test
+    void 오디오_업로드_실패() throws Exception {
+        // given
+        MultipartFile mockMultipartFile = new MockMultipartFile(
+                INVALID_EXTENSION_AUDIO_FILE.getName(),
+                INVALID_EXTENSION_AUDIO_FILE.getName(),
+                MediaType.MULTIPART_FORM_DATA_VALUE,
+                new FileInputStream(INVALID_EXTENSION_AUDIO_FILE));
+
+        // when then
+        assertThatThrownBy(() -> fileStoreService.uploadAudioFile(TEST_MEMBER_LOGIN_INFO, mockMultipartFile))
+                .isInstanceOf(InvalidAudioFileExtensionException.class);
     }
 }

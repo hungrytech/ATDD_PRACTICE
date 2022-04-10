@@ -41,10 +41,28 @@ public class FileStoreService {
         fileStoreRepository.save(fileStore);
     }
 
+    @Transactional
     public void uploadVideoFile(MemberLoginInfo memberLoginInfo, MultipartFile requestFile) throws IOException {
         FileUploadResult fileUploadResult = fileService.uploadFile(
                 requestFile,
                 FileType.VIDEO,
+                memberLoginInfo.getEmail());
+
+        FileStore fileStore = FileStore.createFileStore(
+                memberLoginInfo.getId(),
+                FileInfo.of(
+                        fileUploadResult.getPath(),
+                        fileUploadResult.getExtension(),
+                        fileUploadResult.getOriginalFileName()));
+
+        fileStoreRepository.save(fileStore);
+    }
+
+    @Transactional
+    public void uploadAudioFile(MemberLoginInfo memberLoginInfo, MultipartFile requestFile) throws IOException {
+        FileUploadResult fileUploadResult = fileService.uploadFile(
+                requestFile,
+                FileType.AUDIO,
                 memberLoginInfo.getEmail());
 
         FileStore fileStore = FileStore.createFileStore(

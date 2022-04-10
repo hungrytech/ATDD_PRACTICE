@@ -1,5 +1,5 @@
 package com.atdd.practice.filestore.infrastructure;
 
 public enum FileType {
-    IMAGE, VIDEO;
+    IMAGE, VIDEO, AUDIO
 }

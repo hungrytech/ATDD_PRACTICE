@@ -1,5 +1,6 @@
 package com.atdd.practice.filestore.infrastructure;
 
+import com.atdd.practice.filestore.application.exception.InvalidAudioFileExtensionException;
 import com.atdd.practice.filestore.application.exception.InvalidImageFileExtensionException;
 import com.atdd.practice.filestore.application.exception.InvalidVideoFileExtensionException;
 import org.junit.jupiter.api.DisplayName;
@@ -48,11 +49,33 @@ public class FileExtensionValidatorTest {
     @ParameterizedTest
     @ValueSource(strings = {
             "video1.mov",
-            "image2.mkv"
+            "video2.mkv"
     })
     void 비디오_확장자_검사_실패(String fileName) {
         assertThatThrownBy(() -> FileExtensionValidator.validateExtension(FileType.VIDEO, extractExtension(fileName)))
                 .isInstanceOf(InvalidVideoFileExtensionException.class);
+    }
+
+    @DisplayName("지원하는 오디오확장자를 가질경우 성공")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "audio1.wav",
+            "audio2.mp3"
+    })
+    void 오디오_확장자_검사_성공(String fileName) {
+        assertThatCode(() -> FileExtensionValidator.validateExtension(FileType.AUDIO, extractExtension(fileName)))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("지원하지않는 오디오확장자오 가질경우 실패")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "video1.ogg",
+            "video2.vox"
+    })
+    void 오디오_확장자_검사_실패(String fileName) {
+        assertThatThrownBy(() -> FileExtensionValidator.validateExtension(FileType.AUDIO, extractExtension(fileName)))
+                .isInstanceOf(InvalidAudioFileExtensionException.class);
     }
 
     private String extractExtension(String fileName) {
