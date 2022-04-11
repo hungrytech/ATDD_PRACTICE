@@ -32,8 +32,6 @@ public class AcceptanceTest {
     @Autowired
     private DatabaseCleanUp databaseCleanUp;
 
-    protected static final RestAssuredConfig convertSnakeCaseConfig = convertSnakeCaseConfig();
-
     private static final String API_RESPONSE_DATA = "data";
 
     private static final String API_EXCEPTION_MESSAGE = "error";
@@ -76,15 +74,6 @@ public class AcceptanceTest {
         return AUTHENTICATION_TYPE + convertToData(
                 로그인_요청(this.memberLoginRequest), MemberLoginResponse.class)
                 .getAccessToken();
-    }
-
-    private static RestAssuredConfig convertSnakeCaseConfig() {
-        return RestAssured.config()
-                .objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(((cls, charset) -> {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    return objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
-                            .registerModule(new JavaTimeModule());
-                })));
     }
 }
 

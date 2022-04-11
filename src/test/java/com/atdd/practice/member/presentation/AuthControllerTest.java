@@ -80,7 +80,6 @@ public class AuthControllerTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> 로그인_요청(MemberLoginRequest memberLoginRequest) {
         return given()
-                .config(convertSnakeCaseConfig)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .log().all()
                 .body(memberLoginRequest)
