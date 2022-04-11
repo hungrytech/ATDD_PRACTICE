@@ -1,5 +1,29 @@
 package com.atdd.practice.filestore.infrastructure;
 
+import com.atdd.practice.filestore.application.exception.InvalidAudioFileExtensionException;
+import com.atdd.practice.filestore.application.exception.InvalidFileExtensionException;
+import com.atdd.practice.filestore.application.exception.InvalidImageFileExtensionException;
+import com.atdd.practice.filestore.application.exception.InvalidVideoFileExtensionException;
+
+import java.util.Arrays;
+
 public enum FileType {
-    IMAGE, VIDEO, AUDIO
+    IMAGE(new String[]{"png", "jpeg"}, new InvalidImageFileExtensionException()),
+    VIDEO(new String[]{"mp4", "avi"}, new InvalidVideoFileExtensionException()),
+    AUDIO(new String[]{"wav", "mp3"}, new InvalidAudioFileExtensionException());
+
+    private final String[] extensions;
+
+    private final InvalidFileExtensionException invalidFileExtensionException;
+
+    FileType(String[] extensions, InvalidFileExtensionException invalidFileExtensionException) {
+        this.extensions = extensions;
+        this.invalidFileExtensionException = invalidFileExtensionException;
+    }
+
+    public void validateExtension(String extension) {
+        if (!Arrays.asList(this.extensions).contains(extension)) {
+            throw this.invalidFileExtensionException;
+        }
+    }
 }

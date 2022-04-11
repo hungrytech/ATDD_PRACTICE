@@ -28,13 +28,12 @@ public class LocalFileService implements FileService {
             throw new InvalidFileRequestException();
         }
 
-        String extension = extractExtension(multipartFile);
-        FileExtensionValidator.validateExtension(fileType, extension);
+        fileType.validateExtension(extractExtension(multipartFile));
 
         String fileName = createIdentifierName(multipartFile);
         multipartFile.transferTo(new File(createDestination(memberEmail) + fileName));
 
-        return new FileUploadResult(fileName, extension, multipartFile.getOriginalFilename());
+        return new FileUploadResult(fileName, extractExtension(multipartFile), multipartFile.getOriginalFilename());
     }
 
     private String createDestination(String memberEmail) {

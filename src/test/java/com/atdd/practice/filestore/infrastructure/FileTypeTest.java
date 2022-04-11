@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class FileExtensionValidatorTest {
+class FileTypeTest {
 
     @DisplayName("지원하는 이미지확장자를 가질경우 성공")
     @ParameterizedTest
@@ -19,7 +19,7 @@ public class FileExtensionValidatorTest {
             "image2.jpeg"
     })
     void 이미지_확장자_검사_성공(String fileName) {
-        assertThatCode(() -> FileExtensionValidator.validateExtension(FileType.IMAGE, extractExtension(fileName)))
+        assertThatCode(() -> FileType.IMAGE.validateExtension(extractExtension(fileName)))
                 .doesNotThrowAnyException();
     }
 
@@ -30,7 +30,7 @@ public class FileExtensionValidatorTest {
             "image2.mov"
     })
     void 이미지_확장자_검사_실패(String fileName) {
-        assertThatThrownBy(() -> FileExtensionValidator.validateExtension(FileType.IMAGE, extractExtension(fileName)))
+        assertThatThrownBy(() -> FileType.IMAGE.validateExtension(extractExtension(fileName)))
                 .isInstanceOf(InvalidImageFileExtensionException.class);
     }
 
@@ -41,7 +41,7 @@ public class FileExtensionValidatorTest {
             "image2.avi"
     })
     void 비디오_확장자_검사_성공(String fileName) {
-        assertThatCode(() -> FileExtensionValidator.validateExtension(FileType.VIDEO, extractExtension(fileName)))
+        assertThatCode(() -> FileType.VIDEO.validateExtension(extractExtension(fileName)))
                 .doesNotThrowAnyException();
     }
 
@@ -52,7 +52,7 @@ public class FileExtensionValidatorTest {
             "video2.mkv"
     })
     void 비디오_확장자_검사_실패(String fileName) {
-        assertThatThrownBy(() -> FileExtensionValidator.validateExtension(FileType.VIDEO, extractExtension(fileName)))
+        assertThatThrownBy(() -> FileType.VIDEO.validateExtension(extractExtension(fileName)))
                 .isInstanceOf(InvalidVideoFileExtensionException.class);
     }
 
@@ -63,7 +63,7 @@ public class FileExtensionValidatorTest {
             "audio2.mp3"
     })
     void 오디오_확장자_검사_성공(String fileName) {
-        assertThatCode(() -> FileExtensionValidator.validateExtension(FileType.AUDIO, extractExtension(fileName)))
+        assertThatCode(() -> FileType.AUDIO.validateExtension(extractExtension(fileName)))
                 .doesNotThrowAnyException();
     }
 
@@ -74,12 +74,11 @@ public class FileExtensionValidatorTest {
             "video2.vox"
     })
     void 오디오_확장자_검사_실패(String fileName) {
-        assertThatThrownBy(() -> FileExtensionValidator.validateExtension(FileType.AUDIO, extractExtension(fileName)))
+        assertThatThrownBy(() -> FileType.AUDIO.validateExtension(extractExtension(fileName)))
                 .isInstanceOf(InvalidAudioFileExtensionException.class);
     }
 
     private String extractExtension(String fileName) {
         return fileName.substring(fileName.indexOf(".") + 1);
     }
-
 }
