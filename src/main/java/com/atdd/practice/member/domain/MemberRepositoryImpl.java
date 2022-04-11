@@ -12,11 +12,11 @@ public class MemberRepositoryImpl implements CustomMemberRepository {
 
     @Override
     public boolean existsByEmail(String email) {
-        Integer integer = jpaQueryFactory.selectOne()
+        Integer findResult = jpaQueryFactory.selectOne()
                 .from(member)
                 .where(member.email.value.eq(email))
                 .fetchFirst();
 
-        return integer != null;
+        return findResult != null;
     }
 }
