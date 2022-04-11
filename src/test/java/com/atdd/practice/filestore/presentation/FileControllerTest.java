@@ -57,7 +57,7 @@ public class FileControllerTest extends FileAcceptanceTest {
     @Test
     void 업로드_실패_동영상_파일_잘못된_확장자() {
         // given when
-        ExtractableResponse<Response> response = 이미지_업로드_요청(INVALID_EXTENSION_VIDEO_FILE);
+        ExtractableResponse<Response> response = 동영상_업로드_요청(INVALID_EXTENSION_VIDEO_FILE);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
