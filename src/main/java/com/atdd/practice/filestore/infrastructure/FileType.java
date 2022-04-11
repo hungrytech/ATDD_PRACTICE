@@ -22,8 +22,13 @@ public enum FileType {
     }
 
     public void validateExtension(String extension) {
-        if (!Arrays.asList(this.extensions).contains(extension)) {
+        if (!containsValidExtension(extension)) {
             throw this.invalidFileExtensionException;
         }
+    }
+
+    private boolean containsValidExtension(String extension) {
+        return Arrays.asList(this.extensions)
+                .contains(extension);
     }
 }
