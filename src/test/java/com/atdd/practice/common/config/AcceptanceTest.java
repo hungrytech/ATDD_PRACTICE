@@ -75,6 +75,13 @@ public class AcceptanceTest {
                 로그인_요청(this.memberLoginRequest), MemberLoginResponse.class)
                 .getAccessToken();
     }
+
+    protected String getRefreshToken() {
+        회원가입(memberJoinRequest);
+        return convertToData(
+                로그인_요청(this.memberLoginRequest), MemberLoginResponse.class)
+                .getRefreshToken();
+    }
 }
 
 

@@ -78,6 +78,46 @@ public class AuthControllerTest extends AcceptanceTest {
         );
     }
 
+    //1. 리프레쉬토큰 재발급을 요청한다.
+    //2. 요청한 리프레쉬 토큰이 만료되었는지 확인한다.
+    //3. accessToken을 발급한다.
+    //4. refreshToken을 발급한다.
+    //5. redis에 기존 refreshToken을 제거한다.
+    //6. redis에 새로운 refreshToken을 저장한다.
+    //7. accessToken, refreshToken 과 각각 만료시간을 반환한다.
+
+    @DisplayName("정상적인 토큰재발급 성공")
+    @Test
+    void 토큰_재발급_성공() {
+        // given
+        String refreshToken = getRefreshToken();
+
+        // when
+        ExtractableResponse<Response> response = 토큰_재발급_요청(refreshToken);
+
+        MemberLoginResponse memberLoginResponse = convertToData(response, MemberLoginResponse.class);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(memberLoginResponse.getAccessToken()).isNotNull(),
+                () -> assertThat(memberLoginResponse.getRefreshToken()).isNotNull()
+        );
+    }
+    @DisplayName("저장되지않은 리프레쉬 토큰")
+    @Test
+    void 토큰_재발급_실패_저장되지않은_리프레쉬_토큰() {
+        // given
+        String refreshToken = "notSaveRefreshToken";
+
+        // when
+        ExtractableResponse<Response> response = 토큰_재발급_요청(refreshToken);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+
+    }
+
     public static ExtractableResponse<Response> 로그인_요청(MemberLoginRequest memberLoginRequest) {
         return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -85,6 +125,18 @@ public class AuthControllerTest extends AcceptanceTest {
                 .body(memberLoginRequest)
                 .when()
                 .post("/api/v1/login")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 토큰_재발급_요청(String refreshToken) {
+        return given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("refreshToken", refreshToken)
+                .log().all()
+                .when()
+                .post("/api/v1/refresh")
                 .then()
                 .log().all()
                 .extract();

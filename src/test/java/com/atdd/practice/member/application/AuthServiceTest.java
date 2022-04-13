@@ -4,6 +4,7 @@ import com.atdd.practice.common.config.ServiceTest;
 import com.atdd.practice.common.security.infrastructure.JwtUtils;
 import com.atdd.practice.common.security.infrastructure.RefreshToken;
 import com.atdd.practice.member.application.exception.InvalidLoginInfoException;
+import com.atdd.practice.member.application.exception.NotRegisteredRefreshToken;
 import com.atdd.practice.member.domain.MemberRepository;
 import com.atdd.practice.member.domain.RefreshTokenRepository;
 import com.atdd.practice.member.presentation.dto.request.MemberLoginRequest;
@@ -14,6 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Optional;
 
 import static com.atdd.practice.member.fixture.MemberFixture.*;
@@ -37,16 +42,19 @@ class AuthServiceTest extends ServiceTest {
 
     private AuthService authService;
 
+    private JwtUtils jwtUtils;
+
     @BeforeEach
     void setUp() {
+        jwtUtils = new JwtUtils(SECRET_KEY,
+                IDENTIFIED_VALUE,
+                ACCESS_TOKEN_EXPIRED_IN,
+                REFRESH_TOKEN_EXPIRED_IN);
         authService = new AuthService(
                 memberRepository,
                 refreshTokenRepository,
                 passwordEncoder,
-                new JwtUtils(SECRET_KEY,
-                        IDENTIFIED_VALUE,
-                        ACCESS_TOKEN_EXPIRED_IN,
-                        REFRESH_TOKEN_EXPIRED_IN));
+                jwtUtils);
     }
 
     @DisplayName("로그인 성공 - accessToken과 refreshToken을 반환한다.")
@@ -102,5 +110,43 @@ class AuthServiceTest extends ServiceTest {
         assertThatThrownBy(() -> authService.login(memberLoginRequest)).isInstanceOf(InvalidLoginInfoException.class);
     }
 
+    @DisplayName("리프레쉬토큰 재발급 성공 - accessToken과 refreshToken을 반환한다.")
+    @Test
+    void 토큰_재발급_성공() {
+        // given
+        String refreshToken = "refreshToken";
 
+        // when
+        given(refreshTokenRepository.findById(refreshToken))
+                .willReturn(Optional.of(
+                        jwtUtils.createRefreshToken(
+                                refreshToken,
+                                LocalDateTime.of(2340, 10, 10, 10, 32))
+                ));
+        given(refreshTokenRepository.save(any(RefreshToken.class)))
+                .willReturn(MEMBER_ADMIN_REFRESHTOKEN);
+
+        MemberLoginResponse memberLoginResponse = authService.reissueRefreshToken(refreshToken);
+
+        // then
+        assertAll(
+                () -> assertThat(memberLoginResponse.getAccessToken()).isNotNull(),
+                () -> assertThat(memberLoginResponse.getRefreshToken()).isNotNull()
+        );
+    }
+
+    @DisplayName("토큰재발급 실패 - 등록된 리프레쉬토큰이 아닌 경우")
+    @Test
+    void 토큰_재발급_실패() {
+        // given
+        String refreshToken = "refreshToken";
+
+        // when
+        given(refreshTokenRepository.findById(refreshToken))
+                .willReturn(Optional.empty());
+
+        // then
+        assertThatThrownBy(() -> authService.reissueRefreshToken(refreshToken))
+                .isInstanceOf(NotRegisteredRefreshToken.class);
+    }
 }

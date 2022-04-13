@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 
 import static java.time.LocalDateTime.now;
@@ -33,6 +34,16 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, insertRefreshTokenInCookie(memberLoginResponse).toString())
                 .body(ApiResponseUtils.createSuccessResponse(memberLoginResponse, "로그인에 성공했습니다."));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse> reissueRefreshToken(HttpServletRequest request) {
+        MemberLoginResponse memberLoginResponse = authService.reissueRefreshToken(request.getHeader("refreshToken"));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, insertRefreshTokenInCookie(memberLoginResponse).toString())
+                .body(ApiResponseUtils.createSuccessResponse(
+                memberLoginResponse, "토큰이 재발급 되었습니다."));
     }
 
     private ResponseCookie insertRefreshTokenInCookie(MemberLoginResponse memberLoginResponse) {

@@ -14,7 +14,14 @@ public class CommonControllerExceptionHandler {
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<ApiResponse> handleInvalidRequestException(InvalidRequestException exception) {
 
-        log.debug("잘못된 요청 예외 발생 메세지: {} 원인: {}", exception.getMessage(), exception.getClass().getSimpleName());
+        log.info("잘못된 요청 예외 발생 메세지: {} 원인: {}", exception.getMessage(), exception.getClass().getSimpleName());
+        return ResponseEntity.status(exception.getHttpStatus())
+                .body(ApiResponseUtils.createFailResponse(exception));
+    }
+
+    @ExceptionHandler(AuthorizeException.class)
+    public ResponseEntity<ApiResponse> handleAuthorizeException(AuthorizeException exception) {
+        log.info("등록되지 않은 리프레쉬 토큰 요청 메시지: {}", exception.getMessage());
         return ResponseEntity.status(exception.getHttpStatus())
                 .body(ApiResponseUtils.createFailResponse(exception));
     }
